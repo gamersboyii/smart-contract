@@ -1,0 +1,7 @@
+out/
+cache/
+broadcast/
+.forge/
+node_modules/
+.opencode/
+lib/forge-std/.git

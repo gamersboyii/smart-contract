@@ -1,0 +1,50 @@
+# Subgraph schema sketch for the Enterprise DAO stack.
+# Terminal-state derivation (the one non-obvious rule):
+#   Executed  <- PackageExecuted
+#   Cancelled <- PackageCancelled (guardian/gov cancel OR closeStuckPackage)
+#              OR PackageExpired (closeExpiredPackage)
+#   Expired-but-unclosed <- expiresAt passed with no terminal event yet
+#   (poll DAOReadHub.packageStatus for live readiness instead of deriving it here).
+
+type Package @entity {
+  id: Bytes!
+  target: Bytes!
+  value: BigInt!
+  tier: Int!
+  nonce: BigInt!
+  executeAfter: BigInt!
+  expiresAt: BigInt
+  predecessor: Bytes
+  status: String!
+  executedTx: Bytes
+  dataHash: Bytes!
+}
+
+type Proposal @entity {
+  id: BigInt!
+  state: String!
+  forVotes: BigInt!
+  againstVotes: BigInt!
+  abstainVotes: BigInt!
+  quorumRequired: BigInt!
+}
+
+type VestingSchedule @entity {
+  id: BigInt!
+  beneficiary: Bytes!
+  token: Bytes!
+  totalAmount: BigInt!
+  released: BigInt!
+  start: BigInt!
+  cliff: BigInt!
+  duration: BigInt!
+  revocable: Boolean!
+  revoked: Boolean!
+}
+
+type TreasuryPosition @entity {
+  id: Bytes!
+  token: Bytes!
+  balance: BigInt!
+  floor: BigInt!
+}
